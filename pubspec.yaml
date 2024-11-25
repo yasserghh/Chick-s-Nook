@@ -58,6 +58,7 @@ dependencies:
   jiffy: 
   flutter_svg: 
   change_app_package_name: 
+  intl_phone_number_input: ^0.7.4
 
 
   # The following adds the Cupertino Icons font to your application.
