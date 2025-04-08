@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -102,14 +101,14 @@ class _OtpForgotPasswordScreenState extends State<OtpForgotPasswordScreen> {
                     fieldWidth: 40.w,
                     fillColor: ColorManager.grey2,
                     onSubmit: (e) async {
-                      final _auth = FirebaseAuth.instance;
-                      showDialog(
+/*                       final _auth = FirebaseAuth.instance;
+ */                      showDialog(
                           context: context,
                           builder: ((context) => Dialog(
                               backgroundColor: const Color.fromARGB(0, 0, 0, 0),
                               elevation: 0,
                               child: showDialogLoading())));
-                      try {
+                      /* try {
                         PhoneAuthCredential credincial =
                             PhoneAuthProvider.credential(
                                 verificationId: credincialID, smsCode: e);
@@ -142,7 +141,7 @@ class _OtpForgotPasswordScreenState extends State<OtpForgotPasswordScreen> {
                             backgroundColor: ColorManager.reed,
                             textStyle: getSemiBoldStyle(
                                 14, ColorManager.white, FontsConstants.cairo));
-                      }
+                      } */
                     },
                   ),
                 )),

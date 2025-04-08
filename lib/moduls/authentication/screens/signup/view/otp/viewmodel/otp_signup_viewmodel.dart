@@ -19,6 +19,7 @@ class OtpSignupViewModel extends BaseViewModel {
     this._signupUseCases,
     this._dataSource,
   );
+  
   completSignup(BuildContext context,
       {required String firstName,
       required String lastName,
@@ -30,7 +31,7 @@ class OtpSignupViewModel extends BaseViewModel {
             lastName: lastName,
             phone: phone,
             password: password,
-            token: token)))
+            token: token, fcmtoken: '')))
         .fold(
             (faileur) => {
                   dimissDialog(context),

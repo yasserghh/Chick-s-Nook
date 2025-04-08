@@ -193,7 +193,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     lastName: _signupViewModel.lastNameController.text,
                     phone: _signupViewModel.phoneNumber,
                     password: _signupViewModel.password1Controller.text,
-                    token: _signupViewModel.fcmToken!);
+                    token: _signupViewModel.fcmToken!, );
                               }));
                   }),
                   SizedBox(

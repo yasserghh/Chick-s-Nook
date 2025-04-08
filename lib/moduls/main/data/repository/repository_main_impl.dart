@@ -63,8 +63,9 @@ class MainRpositoryImpl implements MainRepository {
   @override
   Future<Either<Faileur, String>> sendOrder(Map<String, dynamic> order) async {
     if (await _networkInfo.isConnected == true) {
+
       try {
-        var response = await _remoteDataSource.sendOrder(order);
+              var response = await _remoteDataSource.sendOrder(order);
         if (response.message == 'OK') {
           return right(response.message ?? '');
         } else {
@@ -139,7 +140,8 @@ class MainRpositoryImpl implements MainRepository {
     if (await _networkInfo.isConnected == true) {
       try {
         var response = await _remoteDataSource.deleteProfil(id);
-        if (response.message == 'ok') {
+        print("====>${response.message}");
+        if (response.message == '200') {
           return right('');
         } else {
           return Left(DataSource.DEFAULT.getFaileur());

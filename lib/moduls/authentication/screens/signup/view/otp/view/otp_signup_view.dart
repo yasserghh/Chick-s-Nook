@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
@@ -140,18 +139,18 @@ class _OtpSignupScreenState extends State<OtpSignupScreen> {
                       fieldWidth: 40.w,
                       fillColor: ColorManager.grey2,
                       onSubmit: (e) async {
-                        final _auth = FirebaseAuth.instance;
+                        /* final _auth = FirebaseAuth.instance; */
                         showDialog(
                             context: context,
                             builder: ((context) => Dialog(
                                 backgroundColor: Color.fromARGB(0, 0, 0, 0),
                                 elevation: 0,
                                 child: showDialogLoading())));
-                        try {
-                          PhoneAuthCredential credincial =
+                        /* try {
+                         /*  PhoneAuthCredential credincial =
                               PhoneAuthProvider.credential(
-                                  verificationId: credincialID, smsCode: e);
-                          await _auth.signInWithCredential(credincial);
+                                  verificationId: credincialID, smsCode: e); */
+                          /* await _auth.signInWithCredential(credincial); */
                           dimissDialog(context);
                           if (_auth.currentUser != null) {
                             // ignore: use_build_context_synchronously
@@ -180,7 +179,7 @@ class _OtpSignupScreenState extends State<OtpSignupScreen> {
                               backgroundColor: ColorManager.reed,
                               textStyle: getSemiBoldStyle(14,
                                   ColorManager.white, FontsConstants.cairo));
-                        }
+                        } */
                       },
                     ),
                   ),

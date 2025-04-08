@@ -2,6 +2,8 @@ class Constants {
   static const String baseUrl = 'https://control.chicksnook.net';
   static const String producrUrl = '/public/storage/product/';
   static const String categoryUrl = '/public/storage/category/';
+  static const String deleteOrder =
+      '$baseUrl/update_delivery_back_end/deleteorder.php';
 
   static const double zeroDouble = 0;
 

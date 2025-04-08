@@ -8,13 +8,18 @@ import '../../../../app/constants.dart';
 
 abstract class ApiServiceClientAuth {
   Future<SignupResponse> login(
-      {required String phone, required String password, required String token});
-  Future<Map<String, dynamic>> signup(
-      {required String firstName,
-      required String lastName,
-      required String phone,
+      {required String phone,
       required String password,
-      required String token});
+      required String token,
+      required String? fcmtoken});
+  Future<Map<String, dynamic>> signup({
+    required String firstName,
+    required String lastName,
+    required String phone,
+    required String password,
+    required String token,
+    required String? fcmtoken,
+  });
   Future<SignupResponse> check_Phone_email({
     required String phone,
   });
@@ -38,7 +43,7 @@ class ApiServiceClientAuthImpl implements ApiServiceClientAuth {
       receiveDataWhenStatusError: true,
       extra: <String, dynamic>{},
       headers: {
-        "Authorization" : "Bearer $token",
+        "Authorization": "Bearer $token",
       },
       queryParameters: <String, dynamic>{},
     );
@@ -48,15 +53,19 @@ class ApiServiceClientAuthImpl implements ApiServiceClientAuth {
   Future<SignupResponse> login(
       {required String phone,
       required String password,
-      required String token}) async {
-    var data = FormData.fromMap(
-        {'email': phone, 'password': password, 'token': token});
+      required String token,
+      required String? fcmtoken}) async {
+    var data = FormData.fromMap({
+      'phone': phone,
+      'password': password,
+      'token': token,
+      if (fcmtoken != null) 'cm_firebase_token': fcmtoken
+    });
 
     var response = await dio.post('/api/v1/auth/login', data: data);
 
     if (response.data["status"] == "ok") {
       SharedPreferences shared = await SharedPreferences.getInstance();
-
       await shared.setString("token", response.data["token"]);
 
       dio.options.headers = {
@@ -73,18 +82,20 @@ class ApiServiceClientAuthImpl implements ApiServiceClientAuth {
       required String lastName,
       required String phone,
       required String password,
-      required String token}) async {
+      required String token,
+      required String? fcmtoken}) async {
     var data = FormData.fromMap({
       'f_name': firstName,
       'l_name': lastName,
       'phone': phone,
       'password': password,
-      'token': token
+      'token': token,
+      if (fcmtoken != null) 'cm_firebase_token': fcmtoken
     });
+
     var response = await dio.post('/api/v1/auth/registration', data: data);
 
     if (response.data["token"].toString().isNotEmpty) {
-
       print(response.data["token"]);
       SharedPreferences shared = await SharedPreferences.getInstance();
 

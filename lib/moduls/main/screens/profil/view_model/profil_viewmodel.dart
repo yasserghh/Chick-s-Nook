@@ -44,16 +44,17 @@ class ProfilViewModel extends BaseViewModel {
   getUserData() async {
     List<Map>? user = await _dataSource.onReedDbUser();
     print(user);
-    f_nameController.text = user?[0]['f_name'].toString() ?? '';
-    l_nameController.text = user?[0]['l_name'].toString() ?? '';
-    phoneController.text = user?[0]['phone'].toString() ?? '';
+    f_nameController.text = user?.last['f_name'].toString() ?? '';
+    l_nameController.text = user?.last['l_name'].toString() ?? '';
+    phoneController.text = user?.last['phone'].toString() ?? '';
 
     print(phoneController.text);
-     //emailController.text = user?[0]['phone'].toString() ?? '';
-    firstName = user?[0]['f_name'].toString() ?? '';
-    id = user?[0]['id'];
+    //emailController.text = user?.last['phone'].toString() ?? '';
+    firstName = user?.last['f_name'].toString() ?? '';
+    id = user?.last['id'];
+    print("====>$id");
     firstNameInput.add(firstName);
-    //token = user?[0]['token'];
+    //token = user?.last['token'];
     //print(token);
   }
 
@@ -115,13 +116,15 @@ class ProfilViewModel extends BaseViewModel {
           l_nameController.text.length > 3) {
         if (password1Controller.text == password2Controller.text) {
           statesButtonInput.add('loading');
-          (await _useCase.excute(UpdateProfilInput(
-                  id: id!,
-                  f_name: f_nameController.text,
-                  l_name: l_nameController.text,
-                  password: password1Controller.text,
-                  token: token,
-                  ),))
+          (await _useCase.excute(
+            UpdateProfilInput(
+              id: id!,
+              f_name: f_nameController.text,
+              l_name: l_nameController.text,
+              password: password1Controller.text,
+              token: token,
+            ),
+          ))
               .fold(
                   (l) => {
                         showToast('حدث خطا في تحديث البيانات',
@@ -203,8 +206,7 @@ class ProfilViewModel extends BaseViewModel {
                 _preferences.deleteLangitude(),
                 _preferences.deleteLatitude(),
                 _preferences.deleteLocation(),
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                    Routes.welcomeScreen, (route) => false)
+                Navigator.of(context).pushReplacementNamed(Routes.mainScreen)
               });
     }
   }
@@ -276,8 +278,7 @@ class ProfilViewModel extends BaseViewModel {
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(40),
                           child: MaterialButton(
-                              splashColor:
-                                  ColorManager.primary,
+                              splashColor: ColorManager.primary,
                               onPressed: () {
                                 _dataSource.onDeleteDbUser(id: id!);
                                 _preferences.deleteIsLogin();

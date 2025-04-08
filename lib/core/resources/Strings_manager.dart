@@ -6,7 +6,7 @@ class StringManager {
   static const String titel2 = "توصيل سريع";
   static const String titel3 = "تتبع مباشر";
   static const String subTitel1 =
-      "اختبر جرعة من المتعة مع أفضل طعم من شاورما أوفر دوز وأحصل على توصيل سريع إلى عنوانك";
+      "اختبر نكهاتنا السرية مع تشكس نووك و أحصل على توصيل سريع";
   static const String subTitel2 =
       "توصيل وجباتك بسرعة إلى منزلك أو مكتبك أينما كنت";
   static const String subTitel3 =

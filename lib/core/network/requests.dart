@@ -2,14 +2,15 @@ class LoginRequest {
   String phone;
   String password;
   String token;
+  String? fcmtoken;
   LoginRequest(
-      {required this.phone, required this.password, required this.token});
+      {required this.phone, required this.password, required this.token,required this.fcmtoken});
 }
 
 class SignupRequest {
   String firstName;
   String lastName;
-
+  String? fcmtoken;
   String phone;
   String password;
   String token;
@@ -18,7 +19,8 @@ class SignupRequest {
       required this.lastName,
       required this.phone,
       required this.password,
-      required this.token});
+      required this.token,
+      required this.fcmtoken});
 }
 
 class Check_email_phone_request {

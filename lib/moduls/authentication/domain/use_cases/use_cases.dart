@@ -17,23 +17,25 @@ class LoginUseCases extends BaseUseCase<LoginInput, Login> {
     return await _authenticationRepository.login(LoginRequest(
         phone: loginInputs.phone,
         password: loginInputs.password,
-        token: loginInputs.token));
+        token: loginInputs.token, fcmtoken: loginInputs.fcmtoken));
   }
 }
 
 // signup
 
-class SignupUseCases extends BaseUseCase<SignupInput, Map<String,dynamic>> {
+class SignupUseCases extends BaseUseCase<SignupInput, Map<String, dynamic>> {
   final AuthenticationRepository _authenticationRepository;
   SignupUseCases(this._authenticationRepository);
   @override
-  Future<Either<Faileur, Map<String,dynamic>>> excute(SignupInput signupInputs) async {
+  Future<Either<Faileur, Map<String, dynamic>>> excute(
+      SignupInput signupInputs) async {
     return await _authenticationRepository.signup(SignupRequest(
         firstName: signupInputs.firstName,
         lastName: signupInputs.lastName,
         phone: signupInputs.phone,
         password: signupInputs.password,
-        token: signupInputs.token));
+        token: signupInputs.token,
+        fcmtoken: signupInputs.fcmtoken));
   }
 }
 
@@ -43,9 +45,8 @@ class CheckPhoneUseCase extends BaseUseCase<Check_Phone_email_inputs, Login> {
   @override
   Future<Either<Faileur, Login>> excute(
       Check_Phone_email_inputs checkInputs) async {
-    return await _authenticationRepository.check_email_phone(
-        Check_email_phone_request(
-             phone: checkInputs.phone));
+    return await _authenticationRepository
+        .check_email_phone(Check_email_phone_request(phone: checkInputs.phone));
   }
 }
 
@@ -85,24 +86,26 @@ class LoginInput {
   String phone;
   String password;
   String token;
+  String? fcmtoken;
   LoginInput(
-      {required this.phone, required this.password, required this.token});
+      {required this.phone, required this.password, required this.token,
+      required this.fcmtoken});
 }
 
 class SignupInput {
   String firstName;
   String lastName;
-
+  String fcmtoken;
   String phone;
   String password;
   String token;
   SignupInput(
       {required this.firstName,
       required this.lastName,
-     
       required this.phone,
       required this.password,
-      required this.token});
+      required this.token,
+      required this.fcmtoken});
 }
 
 class Check_Phone_email_inputs {

@@ -23,6 +23,7 @@ abstract class MySqlite {
 
 class MySqliteImpl implements MySqlite {
   static Database? _db;
+  
   Future<Database?> get db async {
     if (_db == null) {
       _db = await initialDB();
@@ -35,6 +36,7 @@ class MySqliteImpl implements MySqlite {
   @override
   // initial my database
   Future<Database?> initialDB() async {
+   
     String dataBasePath = await getDatabasesPath();
     String path = join(dataBasePath, "card.db");
 
@@ -79,7 +81,7 @@ CREATE TABLE "cards" ("id" INTEGER PRIMARY KEY AUTOINCREMENT, "title" TEXT ,"sub
     return response;
   }
 
-  @override
+ /*  @override
   Future<int> onInsertUser(int id, String firstName, String lastName,
     String phone) async {
     Database? mydb = await db;
@@ -95,7 +97,38 @@ CREATE TABLE "cards" ("id" INTEGER PRIMARY KEY AUTOINCREMENT, "title" TEXT ,"sub
     }
     return response;
   }
+ */
+@override
+Future<int> onInsertUser(int id, String firstName, String lastName, String phone) async {
+  Database? mydb = await db;
+  List<Map<String, dynamic>> schema = await mydb!.rawQuery('PRAGMA table_info(user);');
 
+  // Print the schema information for debugging
+  for (var column in schema) {
+    print('Column: ${column['name']}, Type: ${column['type']}, Primary Key: ${column['pk']}');
+  }
+  if (mydb == null) {
+    print("Database not initialized!");
+    return 0;
+  }
+
+  try {
+    int response = await mydb.rawInsert(
+      'INSERT OR REPLACE INTO user (id, f_name, l_name, phone) VALUES (?, ?, ?, ?)',
+      [id, firstName, lastName, phone]
+    );
+
+    if (response > 0) {
+      print("Success in inserting user into DB!");
+    } else {
+      print("Failed to insert into DB!");
+    }
+    return response;
+  } catch (e) {
+    print("DB Error: $e");
+    return 0;
+  }
+}
   @override
   Future<int> onUpdateUser(int id, String firstName, String lastName,
        String phone) async {

@@ -34,7 +34,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
     return await _apiServiceClient.login(
         phone: loginRequest.phone,
         password: loginRequest.password,
-        token: loginRequest.token);
+        token: loginRequest.token, fcmtoken:loginRequest.fcmtoken);
   }
 
   @override
@@ -45,7 +45,8 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       
         phone: signupRequest.phone,
         password: signupRequest.password,
-        token: signupRequest.token);
+        token: signupRequest.token, fcmtoken: signupRequest.fcmtoken,
+        );
   }
 
   @override

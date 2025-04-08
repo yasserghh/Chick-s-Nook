@@ -3,9 +3,9 @@ class ImageManager {
   static const String logo = 'assets/images/chicksNookApp.jpeg';
 
   // onboarding images
-  static const String delivery = 'assets/images/Delivery.png';
-  static const String findFood = 'assets/images/findFood.png';
-  static const String LiveTracking = 'assets/images/Livetracking.png';
+  static const String delivery = 'assets/images/Delivery.jpg';
+  static const String findFood = 'assets/images/findFood.jpg';
+  static const String LiveTracking = 'assets/images/Livetracking.jpg';
   // welcome page
   static const String welcomeBackround = 'assets/images/Backgroundobjects.png';
   // login page

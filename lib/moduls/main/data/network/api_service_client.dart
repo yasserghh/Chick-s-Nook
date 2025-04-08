@@ -27,9 +27,7 @@ class ApiServicesClientMainIpml implements ApiServicesClientMain {
     dio.options = BaseOptions(
       baseUrl: Constants.baseUrl,
       method: 'POST',
-      headers: {
-        "Authorization" : "Bearer $token"
-      },
+      headers: {"Authorization": "Bearer $token"},
       sendTimeout: Constants.timeOut,
       receiveTimeout: Constants.timeOut,
       receiveDataWhenStatusError: true,
@@ -58,14 +56,11 @@ class ApiServicesClientMainIpml implements ApiServicesClientMain {
     //print(token);
     //showToast(token);
     dio.options.headers = {"Authorization": "Bearer $token"};
-
-    print(dio.options.headers);
-
-    var response = await dio.post(
+  print(order);    var response = await dio.post(
       '/api/v1/customer/order/place',
       data: order,
     );
-
+   
     var data = OrderResponse.fromJson({'status': response.data['status']});
     return data;
   }
@@ -92,16 +87,15 @@ class ApiServicesClientMainIpml implements ApiServicesClientMain {
   @override
   Future<UpdateProfileResponse> updateProfil(int id, String f_name,
       String l_name, String password, String token) async {
-       
     Map<String, dynamic> body = {
       "f_name": f_name,
       "l_name": l_name,
       "password": password,
       "user_id": id
     };
-    
+
     var data = FormData.fromMap(body);
-   // print(body);
+    // print(body);
     dio.options.headers = {"Authorization": "Bearer $token"};
 
     var response = await dio.put('/api/v1/customer/update-profile', data: data);
@@ -112,16 +106,15 @@ class ApiServicesClientMainIpml implements ApiServicesClientMain {
 
   @override
   Future<UpdateProfileResponse> deleteProfil(int id) async {
-
     var data = FormData.fromMap({"user_id": id});
     SharedPreferences shared = await SharedPreferences.getInstance();
 
     String token = shared.getString("token") ?? "";
-    
+
     dio.options.headers = {"Authorization": "Bearer $token"};
     var response =
-        await dio.post("/api/v1/customer/remove-account", data: data);
-    print(response);
+        await dio.delete("/api/v1/customer/remove-account", data: data);
+    print("============>$response");
     return UpdateProfileResponse.fromJson(response.data);
   }
 }

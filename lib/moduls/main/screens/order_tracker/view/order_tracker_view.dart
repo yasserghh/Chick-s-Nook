@@ -324,7 +324,15 @@ class _OrderTrackerScreenState extends State<OrderTrackerScreen> {
                                                                           1 -
                                                                           index]
                                                                       .statusOrder ??
-                                                                  '')));
+                                                                  '', orderId: snapshot
+                                                                      .data
+                                                                      ?.orders?[snapshot
+                                                                              .data!
+                                                                              .orders!
+                                                                              .length -
+                                                                          1 -
+                                                                          index]
+                                                                      .id.toString()??'',)));
                                                     })),
                                                 const SizedBox(
                                                   height: 20,

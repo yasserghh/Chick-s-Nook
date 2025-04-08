@@ -109,6 +109,6 @@ class OrderResponse extends BaseResponse {
 
 class UpdateProfileResponse extends BaseResponse {
   UpdateProfileResponse.fromJson(Map<String, dynamic> json) {
-    message = json['status'];
+    message = json['status_code'].toString();
   }
 }

@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:foodapp/core/bases/base_viewmodel.dart';
@@ -49,10 +49,12 @@ class LoginViewModel extends BaseViewModel {
   login(BuildContext context) async {
     if (formKey.currentState!.validate()) {
       loading.toggle();
+      String? fcmToken = await FirebaseMessaging.instance.getToken();
       (await _loginUseCases.excute(LoginInput(
               phone: "$phoneNumber",
               password: passwordController.text,
-              token: "")))
+              token: "",
+              fcmtoken: fcmToken ?? null)))
           .fold(
               (faileur) => {
                     loading.toggle(),
@@ -60,23 +62,29 @@ class LoginViewModel extends BaseViewModel {
                   },
               (success) => {
                     loading.toggle(),
+                    print("=============>${success.user!.id}"),
                     saveUser(
-                        success.user!.id,
-                        success.user!.firstName,
-                        success.user!.lastName,
-                        success.user!.phone,)
+                      success.user!.id,
+                      success.user!.firstName,
+                      success.user!.lastName,
+                      success.user!.phone,
+                    )
                   });
     }
   }
 
-  saveUser(int id, String firstName, String lastName,
-      String phone,) async {
+  saveUser(
+    int id,
+    String firstName,
+    String lastName,
+    String phone,
+  ) async {
     int response = await _dataSource.onInsertUser(
-        id: id,
-        firstName: firstName,
-        lastName: lastName,
-        phone: phone,
-      );
+      id: id,
+      firstName: firstName,
+      lastName: lastName,
+      phone: phone,
+    );
     if (response > 0) {
       _preferences.addIsLogin(true);
       isValidToGoHomePageStream.add(true);

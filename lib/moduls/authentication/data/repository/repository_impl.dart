@@ -18,11 +18,9 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
     if (await _networkInfo.isConnected) {
       try {
         var response = await _remoteDataSource.login(loginRequest);
-        print("----------repository ---------------");
-        print("+++${response.message}+++");
+
         // ignore: unnecessary_null_comparison
         if (response.message == 'ok') {
-    
           return right(response.toDomain());
         } else {
           return left(DataSource.DEFAULT.getFaileur());
@@ -36,7 +34,8 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   }
 
   @override
-  Future<Either<Faileur, Map<String,dynamic>>> signup(SignupRequest signupRequest) async {
+  Future<Either<Faileur, Map<String, dynamic>>> signup(
+      SignupRequest signupRequest) async {
     if (await _networkInfo.isConnected) {
       try {
         var response = await _remoteDataSource.signup(signupRequest);
@@ -44,9 +43,11 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
         if (response != null) {
           return right(response);
         } else {
+          print("$response");
           return left(DataSource.DEFAULT.getFaileur());
         }
       } catch (e) {
+        print("e===========>$e");
         return left(ErrorHandler.handle(e).faileur);
       }
     } else {
@@ -59,15 +60,12 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       Check_email_phone_request checkRequist) async {
     if (await _networkInfo.isConnected) {
       try {
-         print("------");
         var response = await _remoteDataSource.check_email_phone(checkRequist);
-        print("${response.message} ------");
         // ignore: unnecessary_null_comparison
         if (response.message == 'ok') {
           return right(response.toDomain());
         } else if (response.message == 'Forbidden') {
-          return left(
-              Faileur(1, ' رقم الهاتف محجوز بالفعل'));
+          return left(Faileur(1, ' رقم الهاتف محجوز بالفعل'));
         } else {
           return left(DataSource.DEFAULT.getFaileur());
         }

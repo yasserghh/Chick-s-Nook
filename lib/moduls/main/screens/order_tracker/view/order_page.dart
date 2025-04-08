@@ -1,22 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:foodapp/core/bases/base_viewmodel.dart';
 import 'package:foodapp/core/common/public_widgets.dart/custom_button.dart';
 import 'package:foodapp/core/resources/color_manager.dart';
 import 'package:foodapp/core/resources/fonts_manager.dart';
 import 'package:foodapp/core/resources/image_manager.dart';
 import 'package:foodapp/core/resources/routes_manager.dart';
 import 'package:foodapp/core/resources/styles_manager.dart';
+import 'package:foodapp/moduls/main/screens/order_tracker/viewmodel/order_tracker_viewmodel.dart';
 
 class OrderPageScreen extends StatefulWidget {
   String status;
-  OrderPageScreen({super.key, required this.status});
+  String orderId;
+  OrderPageScreen({super.key, required this.status, required this.orderId});
 
   @override
-  State<OrderPageScreen> createState() => _OrderPageScreenState(status);
+  State<OrderPageScreen> createState() =>
+      _OrderPageScreenState(status, orderId);
 }
 
 class _OrderPageScreenState extends State<OrderPageScreen> {
   String status;
-  _OrderPageScreenState(this.status);
+  String orderId;
+  bool isCircleIndicatore = false;
+  _OrderPageScreenState(this.status, this.orderId);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,7 +84,7 @@ class _OrderPageScreenState extends State<OrderPageScreen> {
                 ),
                 Text(
                   status == 'delivered'
-                      ? 'تم توصيل الطعام بنجاح . شهية طيبة مع اوفردوز'
+                      ? 'تم توصيل الطعام بنجاح . شهية طيبة مع شيكس نوك'
                       : "كن مستعد ,سيصل طعامك في اي لحضة الان",
                   style: getRegularStyle(
                       13, ColorManager.grey1, FontsConstants.cairo),
@@ -336,6 +342,24 @@ class _OrderPageScreenState extends State<OrderPageScreen> {
                 SizedBox(
                   height: 40,
                 ),
+                if (status == 'pending')
+                  Column(
+                    children: [
+                      getCustomButton(context, 'الغاء الطلب', () async{
+                        setState(() {
+                          isCircleIndicatore = true;
+                          
+                        });
+                       await deleteOrder(orderId);
+                       setState(() {
+                          isCircleIndicatore = false;
+                       });
+                      }, circleIndicator: isCircleIndicatore),
+                      SizedBox(
+                        height: 20,
+                      ),
+                    ],
+                  ),
                 getCustomButton(context, 'العودة للصفحة الرئيسية', () {
                   Navigator.of(context).pushNamedAndRemoveUntil(
                       Routes.mainScreen, (route) => false);

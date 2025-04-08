@@ -154,6 +154,7 @@ class HomeViewModel extends BaseViewModel {
               data.baners?.forEach((element) {
                 banners?.add(Baner(element.image));
               }),
+              print("==============>${data.category}"),
               data.category?.forEach((element) {
                 category?.add(Caty(element.images, element.title, element.id));
               }),

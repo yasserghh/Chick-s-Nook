@@ -33,7 +33,7 @@ class OrderViewModel extends BaseViewModel {
   @override
   sendOrder(Map<String, dynamic> ord, HomeViewModel homeViewModel,
       BuildContext context) async {
-    print(ord);
+   
     if (homeViewModel.location != '' &&
         homeViewModel.langi != null &&
         homeViewModel.lati != null) {

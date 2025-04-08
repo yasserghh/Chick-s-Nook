@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:foodapp/app/shared_preferences.dart';
@@ -20,12 +20,12 @@ import '../../../../../core/resources/styles_manager.dart';
 
 class SignupViewModel extends BaseViewModel {
   final CheckPhoneUseCase _checkPhoneUseCase;
-    final RemoteLocalDataSource _dataSource;
+  final RemoteLocalDataSource _dataSource;
 
-      final SignupUseCases _signupUseCases;
+  final SignupUseCases _signupUseCases;
 
-
-  SignupViewModel(this._checkPhoneUseCase,this._dataSource,this._signupUseCases);
+  SignupViewModel(
+      this._checkPhoneUseCase, this._dataSource, this._signupUseCases);
   StreamController isValidToRegister = BehaviorSubject<bool>();
   StreamController isGoToLoginPage = BehaviorSubject<bool>();
 
@@ -38,20 +38,19 @@ class SignupViewModel extends BaseViewModel {
   String verificationID = '';
   String? fcmToken = '';
   int? id;
-  final _auth = FirebaseAuth.instance;
-
+/*   final _auth = FirebaseAuth.instance;
+ */
   RxBool loading = false.obs;
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-    final AppPreferences _preferences = inectance<AppPreferences>();
-
+  final AppPreferences _preferences = inectance<AppPreferences>();
 
   @override
   dispose() {
     flowStateController.close();
-   // inectance.unregister<SignupViewModel>();
-   // inectance.unregister<CheckPhoneUseCase>();
+    // inectance.unregister<SignupViewModel>();
+    // inectance.unregister<CheckPhoneUseCase>();
   }
 
   @override
@@ -77,7 +76,7 @@ class SignupViewModel extends BaseViewModel {
                     },
                 (success) => {
                       print("$phoneNumber"),
-                      _auth.verifyPhoneNumber(
+                      /*      _auth.verifyPhoneNumber(
                           phoneNumber: "$phoneNumber",
                           verificationCompleted: (e) {},
                           verificationFailed: (e) {
@@ -92,7 +91,7 @@ class SignupViewModel extends BaseViewModel {
                           },
                           codeAutoRetrievalTimeout: (e) {
                             loading.toggle();
-                          })
+                          }) */
                     });
       } else {
         loading.toggle();
@@ -111,48 +110,50 @@ class SignupViewModel extends BaseViewModel {
     }
   }
 
-
-
-  completSignup(BuildContext context,
-      {required String firstName,
-      required String lastName,
-      required String phone,
-      required String password,
-      required String token}) async {
-
-
-        if (formKey.currentState!.validate()) { 
-        loading.toggle();
-    (await _signupUseCases.excute(SignupInput(
-            firstName: firstName,
-            lastName: lastName,
-            phone: phone,
-            password: password,
-            token: token)))
-        .fold(
-            (faileur) => {
-              loading.toggle(),
-                  dimissDialog(context),
-                  showToast("حدث خطأ اثناء التسجيل . يرجى المحاولة لاحقا",
-                      duration: const Duration(seconds: 5),
-                      context: context,
-                      backgroundColor: ColorManager.reed,
-                      textStyle: getSemiBoldStyle(
-                          14, ColorManager.white, FontsConstants.cairo))
-                },
-            (success) => {
-              loading.toggle(),
-                  //
-                  // print(success.user?.phone),
-                  saveUser(
-                    success["user_id"],
-                    firstName,
-                    lastName,
-                    phone,
-                  ),
-                  Navigator.of(context).pushReplacementNamed(Routes.mainScreen),
-                });
-        }
+  completSignup(
+    BuildContext context, {
+    required String firstName,
+    required String lastName,
+    required String phone,
+    required String password,
+    required String token,
+  }) async {
+    if (formKey.currentState!.validate()) {
+      loading.toggle();
+      fcmToken = await FirebaseMessaging.instance.getToken();
+      print('===========>$fcmToken');
+      (await _signupUseCases.excute(SignupInput(
+              firstName: firstName,
+              lastName: lastName,
+              phone: phone,
+              password: password,
+              token: token,
+              fcmtoken: fcmToken!)))
+          .fold(
+              (faileur) => {
+                    loading.toggle(),
+                    dimissDialog(context),
+                    showToast("حدث خطأ اثناء التسجيل . يرجى المحاولة لاحقا",
+                        duration: const Duration(seconds: 5),
+                        context: context,
+                        backgroundColor: ColorManager.reed,
+                        textStyle: getSemiBoldStyle(
+                            14, ColorManager.white, FontsConstants.cairo))
+                  },
+              (success) => {
+                    loading.toggle(),
+                    //
+                    // print(success.user?.phone),
+                    saveUser(
+                      success["user_id"],
+                      firstName,
+                      lastName,
+                      phone,
+                    ),
+                    Navigator.of(context)
+                        .pushReplacementNamed(Routes.mainScreen),
+                  });
+    }
   }
 
   saveUser(
@@ -191,7 +192,9 @@ Widget showDialogLoading() {
       child: SizedBox(
         height: 120,
         width: 120,
-        child: Lottie.asset(LottieManager.loading,),
+        child: Lottie.asset(
+          LottieManager.loading,
+        ),
       ),
     ),
   );

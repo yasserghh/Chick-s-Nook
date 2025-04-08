@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodapp/core/bases/base_viewmodel.dart';
@@ -13,8 +12,8 @@ import 'package:rxdart/rxdart.dart';
 class ForgotPasswordViewModel extends BaseViewModel {
   final StreamController isValidToGo = BehaviorSubject<bool>();
   final ForgoutPasswordUseCase _useCase;
-  final _auth = FirebaseAuth.instance;
-  ForgotPasswordViewModel(this._useCase);
+/*   final _auth = FirebaseAuth.instance;
+ */  ForgotPasswordViewModel(this._useCase);
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   String? phone;
   String verificationID = '';
@@ -34,7 +33,7 @@ class ForgotPasswordViewModel extends BaseViewModel {
                  loading.toggle(),
               },
           (r) => {
-                _auth.verifyPhoneNumber(
+               /*  _auth.verifyPhoneNumber(
                     phoneNumber: "$phone",
                     verificationCompleted: (e) {},
                     verificationFailed: (e) {
@@ -48,7 +47,7 @@ class ForgotPasswordViewModel extends BaseViewModel {
                     },
                     codeAutoRetrievalTimeout: (e) {
                        loading.toggle();
-                    })
+                    }) */
               });
     }
   }

@@ -216,7 +216,7 @@ class SearchPage extends SearchDelegate {
             child: Image.asset(ImageManager.logo),
           ),
           Text(
-            "مطعم اوفردوز",
+            "مطعم شيكس نووك",
             style: getBoldStyle(26, ColorManager.primary, FontsConstants.cairo),
           ),
         ],

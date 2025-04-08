@@ -1,4 +1,4 @@
-package chicks.food.app
+package chicks.nook.app
 
 import io.flutter.embedding.android.FlutterActivity
 

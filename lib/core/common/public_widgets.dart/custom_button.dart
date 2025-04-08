@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:foodapp/core/resources/color_manager.dart';
 
 Widget getCustomButton(
-    BuildContext context, String text, void Function()? function) {
+    BuildContext context, String text, void Function()? function,{bool circleIndicator = false}) {
   return Container(
     width: double.infinity,
     height: 56,
@@ -16,8 +16,8 @@ Widget getCustomButton(
       child: MaterialButton(
           splashColor: ColorManager.primary,
           onPressed: function,
-          child: Text(
-            text,
+          child:circleIndicator? CircularProgressIndicator(color:Colors.white ,) : Text(
+             text,
             style: Theme.of(context).textTheme.bodySmall,
           )),
     ),

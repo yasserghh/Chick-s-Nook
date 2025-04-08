@@ -5,7 +5,12 @@ class UserResponse {
   String? firstName;
   String? lastName;
   String? phone;
-  UserResponse(this.id, this.firstName, this.lastName, this.phone,);
+  UserResponse(
+    this.id,
+    this.firstName,
+    this.lastName,
+    this.phone,
+  );
   UserResponse.fromJson(Map<String, dynamic> json) {
     id = json['id'] as int?;
     firstName = json['f_name'] as String?;
@@ -19,10 +24,11 @@ class SignupResponse extends BaseResponse {
   SignupResponse(this.userResponse);
   SignupResponse.fromJson(Map<String, dynamic> json) {
     print("start response");
-    json['data'] == null
+    json['user'] == null
         ? null
-        : userResponse = UserResponse.fromJson(json['data']);
+        : userResponse = UserResponse.fromJson(json['user']);
     message = json["status"] as String?;
+    
     print("finish response");
   }
 }
