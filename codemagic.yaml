@@ -5,16 +5,22 @@ workflows:
       flutter: stable
       xcode: latest
     scripts:
-      # Clean and build the app
       - flutter clean
       - flutter pub get
-      - flutter build ios --release
-    # The `testflight` deploy section for uploading to TestFlight
-    publish:
-      ios:
-        bundle_id: "com.yourcompany.yourapp"  # Replace with your app's bundle identifier
-        app_store_connect_api_key: 
-          key_id: YOUR_KEY_ID   # Replace with your App Store Connect API Key ID
-          issuer_id: YOUR_ISSUER_ID  # Replace with your App Store Connect Issuer ID
-          private_key: YOUR_PRIVATE_KEY # You can generate this from App Store Connect API
-        upload_to_testflight: true
+      - flutter build ios --release --no-codesign
+    artifacts:
+      - build/ios/ipa/*.ipa
+    publishing:
+      app_store_connect:
+        auth: api_key
+        api_key:
+          key_id: 93F9B8J34K           # Example: ABC123XYZ
+          issuer_id: c55f0f22-1927-4567-9208-539ac79d4568     # From App Store Connect
+          private_key: |
+            -----BEGIN PRIVATE KEY-----
+            MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgycFon9J2c4YzkU42
+            +I/v+ggF9sRJZvSvsWYer/z4gtigCgYIKoZIzj0DAQehRANCAAQDTpCpwD1e8coV
+            ioBrqBJSRzav2ipVwspUoKbhx96uo6BySmu9qNGUVexI2cWKct6z+0mk4Xv/KJTD
+            Yzbwamjs
+            -----END PRIVATE KEY-----
+        submit_to_testflight: true
