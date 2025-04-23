@@ -5,12 +5,15 @@ workflows:
       flutter: stable
       xcode: latest
       ios_signing:
-        certificates:
-          - ios_distribution
+        distribution_certificate: ios_distribution      # Reference name for your .p12 certificate
+        provisioning_profile: ios_provisioning_profile # Reference name for your .mobileprovision file
+        bundle_identifier: chicks.food.app            # Bundle identifier of your app (replace with your actual app's identifier)
+
     scripts:
       - flutter clean
       - flutter pub get
-      - flutter build ipa --release --export-options-plist=ios/export_options.plist
+      - flutter build ipa --release --export-options-plist=ios/export_options.plist # Removed export-options-plist (unless needed)
+
     artifacts:
       - build/ios/ipa/*.ipa
 
@@ -21,4 +24,3 @@ workflows:
 
     integrations:
       app_store_connect: chicks_update
-
