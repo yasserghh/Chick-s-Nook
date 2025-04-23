@@ -1,0 +1,20 @@
+workflows:
+  ios-release:
+    name: iOS Release
+    environment:
+      flutter: stable
+      xcode: latest
+    scripts:
+      # Clean and build the app
+      - flutter clean
+      - flutter pub get
+      - flutter build ios --release
+    # The `testflight` deploy section for uploading to TestFlight
+    publish:
+      ios:
+        bundle_id: "com.yourcompany.yourapp"  # Replace with your app's bundle identifier
+        app_store_connect_api_key: 
+          key_id: YOUR_KEY_ID   # Replace with your App Store Connect API Key ID
+          issuer_id: YOUR_ISSUER_ID  # Replace with your App Store Connect Issuer ID
+          private_key: YOUR_PRIVATE_KEY # You can generate this from App Store Connect API
+        upload_to_testflight: true
