@@ -12,15 +12,6 @@ workflows:
       - build/ios/ipa/*.ipa
     publishing:
       app_store_connect:
-        auth: api_key
-        api_key:
-          key_id: 93F9B8J34K           
-          issuer_id: c55f0f22-1927-4567-9208-539ac79d4568     
-          private_key: |
-            -----BEGIN PRIVATE KEY-----
-            MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgycFon9J2c4YzkU42
-            +I/v+ggF9sRJZvSvsWYer/z4gtigCgYIKoZIzj0DAQehRANCAAQDTpCpwD1e8coV
-            ioBrqBJSRzav2ipVwspUoKbhx96uo6BySmu9qNGUVexI2cWKct6z+0mk4Xv/KJTD
-            Yzbwamjs
-            -----END PRIVATE KEY-----
+        auth: integration
+        integration: chicks_update
         submit_to_testflight: true
