@@ -21,3 +21,4 @@ workflows:
 
     integrations:
       app_store_connect: chicks_update
+
