@@ -5,10 +5,12 @@ workflows:
       flutter: stable
       xcode: latest
       ios_signing:
-        provisioning_profile:
+        provisioning_profiles:
           - ios_provisioning_profile
-        certificate:
-          - ios_distribution 
+         
+        certificates:
+          - ios_distribution
+         
         distribution_type: app_store  
         bundle_identifier: chicks.food.app  
     scripts:
