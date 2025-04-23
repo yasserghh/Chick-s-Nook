@@ -8,7 +8,7 @@ workflows:
         distribution_certificate: ios_distribution      # Reference name for your .p12 certificate
         provisioning_profile: ios_provisioning_profile # Reference name for your .mobileprovision file
         bundle_identifier: chicks.food.app            # Bundle identifier of your app (replace with your actual app's identifier)
-
+        distribution_type: app-store
     scripts:
       - flutter clean
       - flutter pub get
