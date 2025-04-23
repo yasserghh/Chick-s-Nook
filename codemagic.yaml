@@ -4,19 +4,21 @@ workflows:
     environment:
       flutter: stable
       xcode: latest
-
+      ios_signing:
+        distribution_certificate: 
+          id: ios_distribution  # Must match certificate name in Codemagic UI
+          type: certificate_reference
+        provisioning_profile: 
+          id: ios_provisioning_profile  # Must match profile name in Codemagic UI
+          type: profile_reference
+        distribution_type: app_store  # For TestFlight submission
     scripts:
       - flutter clean
       - flutter pub get
-      - flutter build ipa --release
-
+      - flutter build ipa --release --export-options-plist=ios/export_options.plist
     artifacts:
       - build/ios/ipa/*.ipa
-
     publishing:
       app_store_connect:
         auth: integration
         submit_to_testflight: true
-
-    integrations:
-      app_store_connect: chicks_update
