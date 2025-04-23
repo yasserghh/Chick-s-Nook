@@ -56,13 +56,19 @@ class ApiServicesClientMainIpml implements ApiServicesClientMain {
     //print(token);
     //showToast(token);
     dio.options.headers = {"Authorization": "Bearer $token"};
-  print(order);    var response = await dio.post(
-      '/api/v1/customer/order/place',
-      data: order,
-    );
-   
-    var data = OrderResponse.fromJson({'status': response.data['status']});
-    return data;
+
+    try {
+      var response = await dio.post(
+        '/api/v1/customer/order/place',
+        data: order,
+      );
+      print("=======>${response}");
+      var data = OrderResponse.fromJson({'status': response.data['status']});
+      return data;
+    } catch (e) {
+      print("eeeeee=>$e");
+      return OrderResponse.fromJson({'status': 'status'});
+    }
   }
 
   @override
