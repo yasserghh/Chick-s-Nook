@@ -1,27 +1,29 @@
 workflows:
   ios-release:
     name: iOS Release
+    inputs:
+      - name: distribution_type
+        type: enum
+        enum: [ad_hoc, app_store, development, enterprise]
+        default: app_store
     environment:
       flutter: stable
       xcode: latest
-
-    # <-- Tell Codemagic which CI-stored signing assets to use:
-    code_signing:
-      certificate: ios_distribution         # your P12 reference name in the UI
-      provisioning_profile: ios_provisioning # your .mobileprovision reference name
-
+      ios_signing:
+        distribution_certificate: 
+          id: ios_distribution  # Reference name for your .p12 certificate
+          type: certificate_reference
+        provisioning_profile: 
+          id: ios_provisioning_profile  # Reference name for your .mobileprovision file
+          type: profile_reference
+        distribution_type: "{{ inputs.distribution_type }}"  # Fixed enum value and input reference
     scripts:
       - flutter clean
       - flutter pub get
-      - flutter build ipa --release         # no --no-codesign so CI will sign it
-
+      - flutter build ipa --release --export-options-plist=ios/export_options.plist
     artifacts:
       - build/ios/ipa/*.ipa
-
     publishing:
       app_store_connect:
         auth: integration
         submit_to_testflight: true
-
-    integrations:
-      app_store_connect: chicks_update
