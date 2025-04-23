@@ -5,10 +5,12 @@ workflows:
       flutter: stable
       xcode: latest
       ios_signing:
-        certificate: ios_distribution  # Replace with the Codemagic certificate reference
-        provisioning_profile: ios_provisioning_profile  # Replace with the Codemagic provisioning profile reference
-        distribution_type: app_store  # Required for App Store/TestFlight
-        bundle_identifier: chicks.food.app  # Add bundle identifier here
+        provisioning_profile:
+          - ios_provisioning_profile
+        certificate:
+          - ios_distribution 
+        distribution_type: app_store  
+        bundle_identifier: chicks.food.app  
     scripts:
       - flutter clean
       - flutter pub get
