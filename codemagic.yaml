@@ -1,6 +1,8 @@
 workflows:
   ios-release:
     name: iOS Release
+    integrations:
+      app_store_connect: chicks_update
     environment:
       flutter: stable
       xcode: latest
@@ -19,5 +21,4 @@ workflows:
       app_store_connect:
         auth: integration
         submit_to_testflight: true
-    integrations:
-      app_store_connect: chicks_update  # Must match integration name in Codemagic UI
+
