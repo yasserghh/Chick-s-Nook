@@ -7,12 +7,8 @@ workflows:
       ios_signing:
         provisioning_profiles:
           - ios_provisioning_profile
-         
         certificates:
           - ios_distribution
-         
-        distribution_type: app_store  
-        bundle_identifier: chicks.food.app  
     scripts:
       - flutter clean
       - flutter pub get
