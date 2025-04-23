@@ -4,10 +4,9 @@ workflows:
     environment:
       flutter: stable
       xcode: latest
-
-    certificates:
-      - certificate: ios_distribution      
-
+      ios_signing:
+        certificates:
+          - ios_distribution
     scripts:
       - flutter clean
       - flutter pub get
