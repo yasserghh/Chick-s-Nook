@@ -14,8 +14,8 @@ workflows:
       app_store_connect:
         auth: api_key
         api_key:
-          key_id: 93F9B8J34K           # Example: ABC123XYZ
-          issuer_id: c55f0f22-1927-4567-9208-539ac79d4568     # From App Store Connect
+          key_id: 93F9B8J34K           
+          issuer_id: c55f0f22-1927-4567-9208-539ac79d4568     
           private_key: |
             -----BEGIN PRIVATE KEY-----
             MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgycFon9J2c4YzkU42
