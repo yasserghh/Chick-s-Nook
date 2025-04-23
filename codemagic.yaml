@@ -13,5 +13,4 @@ workflows:
     publishing:
       app_store_connect:
         auth: integration
-        integration: chicks_update
         submit_to_testflight: true
