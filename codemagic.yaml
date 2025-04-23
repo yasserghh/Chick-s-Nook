@@ -4,15 +4,16 @@ workflows:
     environment:
       flutter: stable
       xcode: latest
-      ios_signing:
-        distribution_certificate: ios_distribution      # Reference name for your .p12 certificate
-        provisioning_profile: ios_provisioning_profile # Reference name for your .mobileprovision file
-        bundle_identifier: chicks.food.app            # Bundle identifier of your app (replace with your actual app's identifier)
-        distribution_type: app-store
+
+    # <-- Tell Codemagic which CI-stored signing assets to use:
+    code_signing:
+      certificate: ios_distribution         # your P12 reference name in the UI
+      provisioning_profile: ios_provisioning # your .mobileprovision reference name
+
     scripts:
       - flutter clean
       - flutter pub get
-      - flutter build ipa --release --export-options-plist=ios/export_options.plist # Removed export-options-plist (unless needed)
+      - flutter build ipa --release         # no --no-codesign so CI will sign it
 
     artifacts:
       - build/ios/ipa/*.ipa
