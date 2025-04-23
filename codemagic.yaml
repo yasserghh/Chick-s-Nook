@@ -5,12 +5,8 @@ workflows:
       flutter: stable
       xcode: latest
       ios_signing:
-        distribution_certificate:
-          id: ios_distribution  # Must match certificate name in Codemagic UI
-          type: certificate_reference
-        provisioning_profile:
-          id: ios_provisioning_profile  # Must match profile name in Codemagic UI
-          type: profile_reference
+        certificate: ios_distribution  # Replace with the Codemagic certificate reference
+        provisioning_profile: ios_provisioning_profile  # Replace with the Codemagic provisioning profile reference
         distribution_type: app_store  # Required for App Store/TestFlight
         bundle_identifier: chicks.food.app  # Add bundle identifier here
     scripts:
@@ -23,5 +19,5 @@ workflows:
       app_store_connect:
         auth: integration
         submit_to_testflight: true
-    integrations:  # Add integrations block with reference
+    integrations:
       app_store_connect: chicks_update  # Must match integration name in Codemagic UI
