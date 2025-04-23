@@ -5,11 +5,6 @@ workflows:
       flutter: stable
       xcode: latest
 
-      signing:
-        ios:
-          distribution_certificate: ios_distribution      # the reference name you gave your .p12
-          provisioning_profile: ios_provisioning_profile   # the reference name you gave your .mobileprovision
-
     scripts:
       - flutter clean
       - flutter pub get
