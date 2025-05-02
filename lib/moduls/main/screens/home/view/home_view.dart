@@ -65,8 +65,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   height: 45,
                   width: 100,
                   child: Image.asset(
-                    "assets/images/logo.png",
-                    color: Colors.white,
+                    "assets/images/logo1.png",
+                   
                     fit: BoxFit.fill,
                   ),
                 ),
