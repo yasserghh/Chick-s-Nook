@@ -4,39 +4,53 @@ import Firebase
 import FirebaseMessaging
 import UserNotifications
 
-@UIApplicationMain
-@objc class AppDelegate: FlutterAppDelegate, MessagingDelegate {
+@main
+@objc class AppDelegate: FlutterAppDelegate {
     
-  override func application(
-    _ application: UIApplication,
-    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
-  ) -> Bool {
-    FirebaseApp.configure()
-
-    UNUserNotificationCenter.current().delegate = self
-
-    UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
-      if let error = error {
-        print("Notification authorization failed: \(error.localizedDescription)")
-        return
-      }
-      if granted {
-        DispatchQueue.main.async {
-          UIApplication.shared.registerForRemoteNotifications()
+    override func application(
+        _ application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+    ) -> Bool {
+        // Initialize Firebase first
+        FirebaseApp.configure()
+        
+        // Set up notification delegates
+        if #available(iOS 10.0, *) {
+            UNUserNotificationCenter.current().delegate = self
         }
-      }
+        
+        // Register for remote notifications
+        application.registerForRemoteNotifications()
+        
+        // Set messaging delegate
+        Messaging.messaging().delegate = self
+        
+        // Register plugins
+        GeneratedPluginRegistrant.register(with: self)
+        
+        return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
+    
+    override func application(_ application: UIApplication,
+                             didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        Messaging.messaging().apnsToken = deviceToken
+        super.application(application, didRegisterForRemoteNotificationsWithDeviceToken: deviceToken)
+    }
+    
+    override func application(_ application: UIApplication,
+                             didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        print("Failed to register for remote notifications: \(error.localizedDescription)")
+    }
+}
 
-    Messaging.messaging().delegate = self
+// MARK: - MessagingDelegate
+extension AppDelegate: MessagingDelegate {
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+        print("Firebase registration token: \(String(describing: fcmToken))")
+        // Send token to your server if needed
+    }
+}
 
-    GeneratedPluginRegistrant.register(with: self)
-    return super.application(application, didFinishLaunchingWithOptions: launchOptions)
-  }
-
-  override func application(_ application: UIApplication,
-                            didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-    Messaging.messaging().apnsToken = deviceToken
-  }
 
   // Optional for native token debug logging:
   /*
@@ -44,7 +58,7 @@ import UserNotifications
     print("FCM registration token from native Swift: \(String(describing: fcmToken))")
   }
   */
-}
+
 
 
 /* import UIKit

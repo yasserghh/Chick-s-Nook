@@ -52,5 +52,11 @@
 	</array>
 	<key>UIUserInterfaceStyle</key>
 		<string>Light</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We need your location to show nearby restaurants.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>We use your location to improve service accuracy.</string>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<false/>
 </dict>
 </plist>

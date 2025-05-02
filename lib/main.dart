@@ -39,7 +39,6 @@ void registerNotification() async {
 class NotificationService {
   static FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
-  // Initialize Firebase Messaging
   static Future<void> initialize() async {
     NotificationSettings settings = await firebaseMessaging.requestPermission(
       alert: true,
@@ -47,57 +46,69 @@ class NotificationService {
       provisional: false,
       sound: true,
     );
+
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
         FlutterLocalNotificationsPlugin();
-    // Initialization for Android and iOS
+
     var androidIni = AndroidInitializationSettings("ic_launcher");
-    var iosIni = DarwinInitializationSettings();
+    var iosIni = DarwinInitializationSettings(
+    requestSoundPermission: true,
+    requestBadgePermission: true,
+    requestAlertPermission: true,
+  );
     var ini = InitializationSettings(android: androidIni, iOS: iosIni);
 
     flutterLocalNotificationsPlugin.initialize(ini);
 
-    flutterLocalNotificationsPlugin.initialize(ini);
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      // Create an Android notification channel for Android 8.0 and above
+      // ✅ Wait for APNs token
+      String? apnsToken;
+      int retries = 0;
+      while (apnsToken == null && retries < 5) {
+        try {
+          apnsToken = await firebaseMessaging.getAPNSToken();
+          if (apnsToken == null) {
+            await Future.delayed(Duration(seconds: 1));
+          }
+        } catch (e) {
+          print("❌ Error getting APNs token: $e");
+          break;
+        }
+        retries++;
+      }
+
+      print("📱 APNs Token: $apnsToken");
+
+      try {
+        String? fcmToken = await firebaseMessaging.getToken();
+        print("📦 FCM Token: $fcmToken");
+        await firebaseMessaging.subscribeToTopic('notify');
+      } catch (e) {
+        print("❌ Error getting FCM token or subscribing: $e");
+      }
+
       const AndroidNotificationChannel channel = AndroidNotificationChannel(
-        'high_importance_channel', // id
-        'High Importance Notifications', // name
+        'high_importance_channel',
+        'High Importance Notifications',
         description: 'This channel is used for important notifications.',
         importance: Importance.high,
       );
+  await flutterLocalNotificationsPlugin
+    .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
+    ?.requestPermissions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
 
-      // Create the channel on Android
       await flutterLocalNotificationsPlugin
           .resolvePlatformSpecificImplementation<
               AndroidFlutterLocalNotificationsPlugin>()
           ?.createNotificationChannel(channel);
 
-      // On message received when the app is in the foreground
+
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
         if (message.notification != null) {
-          print("===============>I recieve");
-          // Show the notification
-          flutterLocalNotificationsPlugin.show(
-            0, // notification ID
-            message.notification!.title,
-            message.notification!.body,
-            NotificationDetails(
-              android: AndroidNotificationDetails(
-                'high_importance_channel', // Channel ID
-                'High Importance Notifications', // Channel Name
-                channelDescription:
-                    'This channel is used for important notifications.',
-                importance: Importance.high,
-              ),
-            ),
-          );
-        }
-      });
-
-      // On message received when the app is in the background
-      FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-        if (message.notification != null) {
-          print("===============>I recieve");
           flutterLocalNotificationsPlugin.show(
             0,
             message.notification!.title,
@@ -110,18 +121,44 @@ class NotificationService {
                     'This channel is used for important notifications.',
                 importance: Importance.high,
               ),
+              iOS: DarwinNotificationDetails(
+  presentAlert: true,
+  presentBadge: true,
+  presentSound: true,
+),
+
             ),
           );
         }
       });
 
-      // Subscribe to a topic, e.g., 'notify'
-      firebaseMessaging.subscribeToTopic('notify');
+      FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+        if (message.notification != null) {
+          flutterLocalNotificationsPlugin.show(
+            0,
+            message.notification!.title,
+            message.notification!.body,
+            NotificationDetails(
+              android: AndroidNotificationDetails(
+                'high_importance_channel',
+                'High Importance Notifications',
+                channelDescription:
+                    'This channel is used for important notifications.',
+                importance: Importance.high,
+              ),
+              iOS: DarwinNotificationDetails(
+  presentAlert: true,
+  presentBadge: true,
+  presentSound: true,
+),
+            ),
+          );
+        }
+      });
     }
   }
-
-  // Show notification in the foreground
 }
+
 
 String token = "";
 
@@ -130,28 +167,19 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await NotificationService.initialize();
+
+  try {
+    await NotificationService.initialize();
+  } catch (e) {
+    print("❌ NotificationService failed to initialize: $e");
+  }
+
   await initApp();
 
   SharedPreferences shared = await SharedPreferences.getInstance();
-
   token = shared.getString("token") ?? "";
-
-  print(token);
-  var fcmToken = await FirebaseMessaging.instance.getToken();
-  print('===========>$fcmToken');
-/*    await Firebase.initializeApp(
-    options: const FirebaseOptions(
-        apiKey: "AIzaSyBCMYhoJKuPUvFrNEHEGDgERb78RT7ugtM",
-        authDomain: "food-app-7053e.firebaseapp.com",
-        projectId: "food-app-7053e",
-        storageBucket: "food-app-7053e.appspot.com",
-        messagingSenderId: "827578873712",
-        appId: "1:827578873712:android:8606a13e50dc9b950301b5"),
-  );
- FirebaseMessaging messaging = FirebaseMessaging.instance;  */
-
-  //registerNotification();
+  print("🔐 Local token: $token");
 
   runApp(MyApp());
 }
+

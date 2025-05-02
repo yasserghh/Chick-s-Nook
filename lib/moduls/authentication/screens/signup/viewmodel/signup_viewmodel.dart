@@ -61,11 +61,36 @@ class SignupViewModel extends BaseViewModel {
   goToLoginPage() {
     isGoToLoginPage.add(true);
   }
+Future<String?> waitForFcmToken() async {
+  final messaging = FirebaseMessaging.instance;
 
+  int retries = 0;
+  String? apnsToken;
+
+  // ⏳ Wait up to 5 seconds for APNs token
+  while (apnsToken == null && retries < 5) {
+    apnsToken = await messaging.getAPNSToken();
+    if (apnsToken == null) {
+      await Future.delayed(Duration(seconds: 1));
+    }
+    retries++;
+  }
+
+  if (apnsToken == null) {
+    print('❌ APNs token is still null after waiting');
+    return null;
+  }
+
+  // 🎯 Now APNs token is ready, safe to get FCM token
+  String? fcmToken = await messaging.getToken();
+  return fcmToken;
+}
   @override
   signup(BuildContext context) async {
     if (formKey.currentState!.validate()) {
       loading.toggle();
+      
+
       if (password1Controller.text == password2Controller.text) {
         (await _checkPhoneUseCase.excute(Check_Phone_email_inputs(phoneNumber)))
             .fold(
@@ -120,15 +145,19 @@ class SignupViewModel extends BaseViewModel {
   }) async {
     if (formKey.currentState!.validate()) {
       loading.toggle();
-      fcmToken = await FirebaseMessaging.instance.getToken();
-      print('===========>$fcmToken');
-      (await _signupUseCases.excute(SignupInput(
+
+fcmToken = await waitForFcmToken() ?? "";
+
+
+
+print("-----@@$fcmToken");
+     (await _signupUseCases.excute(SignupInput(
               firstName: firstName,
               lastName: lastName,
               phone: phone,
               password: password,
               token: token,
-              fcmtoken: fcmToken!)))
+              fcmtoken: fcmToken??"")))
           .fold(
               (faileur) => {
                     loading.toggle(),

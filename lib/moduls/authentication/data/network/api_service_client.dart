@@ -89,13 +89,21 @@ class ApiServiceClientAuthImpl implements ApiServiceClientAuth {
       'l_name': lastName,
       'phone': phone,
       'password': password,
-      'token': token,
-      if (fcmtoken != null) 'cm_firebase_token': fcmtoken
+      'cm_firebase_token': fcmtoken??""
     });
-
+  print("${
+{
+      'f_name': firstName,
+      'l_name': lastName,
+      'phone': phone,
+      'password': password,
+      'cm_firebase_token': fcmtoken??""
+    }
+  }");
     var response = await dio.post('/api/v1/auth/registration', data: data);
-
-    if (response.data["token"].toString().isNotEmpty) {
+      print("-----#$response");
+    try{
+      if (response.data["token"].toString().isNotEmpty) {
       print(response.data["token"]);
       SharedPreferences shared = await SharedPreferences.getInstance();
 
@@ -104,6 +112,9 @@ class ApiServiceClientAuthImpl implements ApiServiceClientAuth {
       dio.options.headers = {
         "Authorization": "Bearer ${response.data["token"]}"
       };
+    }
+    }catch(e){
+      print("------------erorrrrr$e");
     }
 
     //print(response.data);
