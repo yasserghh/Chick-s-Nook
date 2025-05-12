@@ -186,7 +186,9 @@ class HomeViewModel extends BaseViewModel {
               )));
     } else if (status.isDenied) {
       var result = await Permission.location.request();
-      if ( result.isGranted) {
+      status = result;
+      if (result.isGranted) {
+       await  getCurrentPosition();
         Navigator.of(context).push(MaterialPageRoute(
             builder: (_) => LocationScreen(
                   homeViewModel: homeViewModel,
