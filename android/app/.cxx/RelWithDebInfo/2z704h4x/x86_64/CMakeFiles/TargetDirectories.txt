@@ -1,0 +1,2 @@
+C:/Chick-snook-client-master/android/app/.cxx/RelWithDebInfo/2z704h4x/x86_64/CMakeFiles/edit_cache.dir
+C:/Chick-snook-client-master/android/app/.cxx/RelWithDebInfo/2z704h4x/x86_64/CMakeFiles/rebuild_cache.dir

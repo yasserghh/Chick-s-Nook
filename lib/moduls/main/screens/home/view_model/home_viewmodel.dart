@@ -185,8 +185,8 @@ class HomeViewModel extends BaseViewModel {
                 homeViewModel: homeViewModel,
               )));
     } else if (status.isDenied) {
-      Permission.location.request();
-      if (await status.isGranted) {
+      var result = await Permission.location.request();
+      if ( result.isGranted) {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (_) => LocationScreen(
                   homeViewModel: homeViewModel,
