@@ -91,12 +91,14 @@ class HomeViewModel extends BaseViewModel {
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {}
+      if (permission == LocationPermission.denied) {
+
+      }
     }
     if (permission == LocationPermission.deniedForever) {
       return false;
     }
-    getCurrentPosition();
+   await  getCurrentPosition();
     return true;
   }
 
@@ -179,6 +181,7 @@ class HomeViewModel extends BaseViewModel {
   @override
   goToPageLocation(BuildContext context, HomeViewModel homeViewModel) async {
     var status = await Permission.location.status;
+  
     if (status.isGranted) {
       Navigator.of(context).push(MaterialPageRoute(
           builder: (_) => LocationScreen(
@@ -186,9 +189,8 @@ class HomeViewModel extends BaseViewModel {
               )));
     } else if (status.isDenied) {
       var result = await Permission.location.request();
-      status = result;
+     
       if (result.isGranted) {
-       await  getCurrentPosition();
         Navigator.of(context).push(MaterialPageRoute(
             builder: (_) => LocationScreen(
                   homeViewModel: homeViewModel,
@@ -202,6 +204,18 @@ class HomeViewModel extends BaseViewModel {
               style: getSemiBoldStyle(14, ColorManager.white, ""),
             )));
       }
+    }else if(status.isPermanentlyDenied){}else{
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: ColorManager.reed,
+            duration: const Duration(seconds: 3),
+            content: Text(
+              "يجب السماح للتطبيق بالوصول الى نضام GPS",
+              style: getSemiBoldStyle(14, ColorManager.white, ""),
+            )));
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (_) => LocationScreen(
+                homeViewModel: homeViewModel,
+              )));
     }
   }
 

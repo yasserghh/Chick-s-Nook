@@ -25,7 +25,7 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   final HomeViewModel _homeViewModel = inectance<HomeViewModel>();
 
   final LocationViewModel _locationViewModel = LocationViewModel();
@@ -37,9 +37,15 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     _homeViewModel.start();
     _locationViewModel.start();
+   WidgetsBinding.instance.addObserver(this);
     super.initState();
   }
-
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _homeViewModel.getLocation(); // Re-fetch location when app is resumed
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -551,6 +557,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void dispose() {
     // TODO: implement dispose
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 }
