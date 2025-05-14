@@ -25,7 +25,7 @@ class CardViewModel extends BaseViewModel {
   final TextEditingController myNote = TextEditingController();
   final RemoteLocalDataSource _dataSource;
   double subfinalPrice = 0;
-  int deliveryPrice = 250;
+  int deliveryPrice = 0;
   int discount = 0;
   double finalPrice = 0;
   List<dynamic> varies = [];

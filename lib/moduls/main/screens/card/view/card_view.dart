@@ -592,7 +592,7 @@ class _CardScreenState extends State<CardScreen> {
                                     height: 8,
                                   )),
                                   Text(
-                                    '250 da',
+                                    'مجاني',
                                     style: getSemiBoldStyle(
                                         18,
                                         ColorManager.primary,

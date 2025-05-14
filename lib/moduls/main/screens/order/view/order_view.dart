@@ -329,7 +329,7 @@ class _OrderScreenState extends State<OrderScreen> {
                     ),
                     const Expanded(child: SizedBox()),
                     Text(
-                      "250 da",
+                      "مجاني",
                       style: getBoldStyle(
                           15, ColorManager.blackBlue, FontsConstants.cairo),
                     )

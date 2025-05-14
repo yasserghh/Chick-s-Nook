@@ -56,7 +56,7 @@ class ApiServicesClientMainIpml implements ApiServicesClientMain {
     //print(token);
     //showToast(token);
     dio.options.headers = {"Authorization": "Bearer $token"};
-
+    print("========>$order");
     try {
       var response = await dio.post(
         '/api/v1/customer/order/place',

@@ -302,7 +302,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               Container(
                 width: double.infinity,
                 height: 200,
-                color: ColorManager.white,
+                color: Colors.transparent,
                 child: CarouselSlider(
                   options: CarouselOptions(
                     height: 180,
