@@ -44,12 +44,32 @@ class LoginViewModel extends BaseViewModel {
   }
 
   // methods
+Future<String?> waitForFcmToken() async {
+  final messaging = FirebaseMessaging.instance;
 
+  int retries = 0;
+  String? apnsToken;
+
+  // ⏳ Wait up to 5 seconds for APNs token
+  while (apnsToken == null && retries < 5) {
+    apnsToken = await messaging.getAPNSToken();
+    if (apnsToken == null) {
+      await Future.delayed(Duration(seconds: 1));
+    }
+    retries++;
+  }
+
+
+
+  // 🎯 Now APNs token is ready, safe to get FCM token
+  String? fcmToken = await messaging.getToken();
+  return fcmToken;
+}
   @override
   login(BuildContext context) async {
     if (formKey.currentState!.validate()) {
       loading.toggle();
-      String? fcmToken = await FirebaseMessaging.instance.getToken();
+      String? fcmToken = await waitForFcmToken();
       (await _loginUseCases.excute(LoginInput(
               phone: "$phoneNumber",
               password: passwordController.text,

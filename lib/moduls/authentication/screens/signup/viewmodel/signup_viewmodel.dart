@@ -76,16 +76,13 @@ Future<String?> waitForFcmToken() async {
     retries++;
   }
 
-  if (apnsToken == null) {
-    print('❌ APNs token is still null after waiting');
-    return null;
-  }
+
 
   // 🎯 Now APNs token is ready, safe to get FCM token
   String? fcmToken = await messaging.getToken();
   return fcmToken;
 }
-  @override
+  
   signup(BuildContext context) async {
     if (formKey.currentState!.validate()) {
       loading.toggle();
