@@ -188,12 +188,12 @@ class _SignupScreenState extends State<SignupScreen> {
                                 color: ColorManager.primary,
                               )
                             : getCustomButton(context, StringManager.creat, () {
-                               _signupViewModel.completSignup(context,
-                                   firstName: _signupViewModel.firstNameController.text,
-                    lastName: _signupViewModel.lastNameController.text,
-                    phone: _signupViewModel.phoneNumber,
-                    password: _signupViewModel.password1Controller.text,
-                    token: _signupViewModel.fcmToken!, );
+                               _signupViewModel.signup(context,
+                                  _signupViewModel.firstNameController.text,
+                _signupViewModel.lastNameController.text,
+                    _signupViewModel.phoneNumber,
+                    _signupViewModel.password1Controller.text,
+                     _signupViewModel.fcmToken!, );
                               }));
                   }),
                   SizedBox(

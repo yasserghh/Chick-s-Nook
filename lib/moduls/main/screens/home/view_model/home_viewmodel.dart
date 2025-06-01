@@ -91,15 +91,38 @@ class HomeViewModel extends BaseViewModel {
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-
-      }
+      if (permission == LocationPermission.denied) {}
     }
     if (permission == LocationPermission.deniedForever) {
       return false;
     }
-   await  getCurrentPosition();
+    await getCurrentPosition();
     return true;
+  }
+
+  Future<bool> isWithinOneKilometer() async {
+    // Position currentPosition = await Geolocator.getCurrentPosition();
+    print(langi);
+    print(lati);
+    double chragaDistanceInMeters = Geolocator.distanceBetween(
+      lati!,
+      langi!,
+      36.7554314,
+      2.9488706,
+    );
+    double babezawareDistanceInMeters = Geolocator.distanceBetween(
+      lati!,
+      langi!,
+      36.7146824,
+      3.1891503,
+    );
+    if (chragaDistanceInMeters <= 14000) {
+      return true;
+    }
+    if (babezawareDistanceInMeters <= 14000) {
+      return true;
+    }
+    return false;
   }
 
   @override
@@ -181,7 +204,7 @@ class HomeViewModel extends BaseViewModel {
   @override
   goToPageLocation(BuildContext context, HomeViewModel homeViewModel) async {
     var status = await Permission.location.status;
-  
+
     if (status.isGranted) {
       Navigator.of(context).push(MaterialPageRoute(
           builder: (_) => LocationScreen(
@@ -189,7 +212,7 @@ class HomeViewModel extends BaseViewModel {
               )));
     } else if (status.isDenied) {
       var result = await Permission.location.request();
-     
+
       if (result.isGranted) {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (_) => LocationScreen(
@@ -204,14 +227,15 @@ class HomeViewModel extends BaseViewModel {
               style: getSemiBoldStyle(14, ColorManager.white, ""),
             )));
       }
-    }else if(status.isPermanentlyDenied){}else{
+    } else if (status.isPermanentlyDenied) {
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            backgroundColor: ColorManager.reed,
-            duration: const Duration(seconds: 3),
-            content: Text(
-              "يجب السماح للتطبيق بالوصول الى نضام GPS",
-              style: getSemiBoldStyle(14, ColorManager.white, ""),
-            )));
+          backgroundColor: ColorManager.reed,
+          duration: const Duration(seconds: 3),
+          content: Text(
+            "يجب السماح للتطبيق بالوصول الى نضام GPS",
+            style: getSemiBoldStyle(14, ColorManager.white, ""),
+          )));
       Navigator.of(context).push(MaterialPageRoute(
           builder: (_) => LocationScreen(
                 homeViewModel: homeViewModel,

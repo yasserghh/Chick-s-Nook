@@ -4,8 +4,13 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:foodapp/app/dependency_injection.dart';
+import 'package:foodapp/core/common/state_rendrer/state_rendrer_impl.dart';
 import 'package:foodapp/core/local_data/remote_local_data.dart';
+import 'package:foodapp/core/resources/color_manager.dart';
+import 'package:foodapp/core/resources/fonts_manager.dart';
+import 'package:foodapp/core/resources/styles_manager.dart';
 import 'package:foodapp/moduls/main/data/responses/home_responses.dart';
 import 'package:foodapp/moduls/main/screens/home/view_model/home_viewmodel.dart';
 import 'package:foodapp/moduls/main/screens/order/view/order_view.dart';
@@ -35,6 +40,7 @@ class CardViewModel extends BaseViewModel {
   Map<String, dynamic> myOrder = {};
   List<Map> user = [];
   int userID = 0;
+  bool isLoading = false;
 
   @override
   dispose() {}
@@ -92,52 +98,60 @@ class CardViewModel extends BaseViewModel {
 
   getMyOrder(BuildContext context, HomeViewModel homeViewModel, String location,
       double lat, double lang, String note) async {
-
-        if(isLogin){
-myOrder = {};
-    List<Map> cart = [];
-    List<Map>? response = await _dataSource.onReedDbCards();
-    if (response != null && response.isNotEmpty) {
-      response.forEach((element) {
-        add_on_ids = [];
-        add_on_qtys = [];
-        (json.decode(element['varies']) as List).forEach((elem) {
-          add_on_ids.add(elem['id']);
-          add_on_qtys.add(1);
+    if (isLogin) {
+      myOrder = {};
+      List<Map> cart = [];
+      List<Map>? response = await _dataSource.onReedDbCards();
+      if (finalPrice < 1000) {
+        dimissDialog(context);
+        showToast("نعتذر الحد الأدنى للطلب 1000 دج",
+            duration: const Duration(seconds: 5),
+            context: context,
+            backgroundColor: ColorManager.reed,
+            textStyle:
+                getSemiBoldStyle(18, ColorManager.white, FontsConstants.cairo));
+        return;
+      }
+      if (response != null && response.isNotEmpty) {
+        response.forEach((element) {
+          add_on_ids = [];
+          add_on_qtys = [];
+          (json.decode(element['varies']) as List).forEach((elem) {
+            add_on_ids.add(elem['id']);
+            add_on_qtys.add(1);
+          });
+          cart.add({
+            'product_id': element['item_id'],
+            'quantity': element['count'],
+            'add_on_ids': add_on_ids,
+            'add_on_qtys': add_on_qtys,
+          });
         });
-        cart.add({
-          'product_id': element['item_id'],
-          'quantity': element['count'],
-          'add_on_ids': add_on_ids,
-          'add_on_qtys': add_on_qtys,
-        });
-      });
-    List<Map>? user = await _dataSource.onReedDbUser();
-      myOrder = {
-        'user_id': user?.last['id'] ??0,
-        'address': '$location',
-        'address_type': 'home',
-        'longitude': lang,
-        'latitude': lat,
-        'order_type': 'delivry',
-        'payment_method': 'cash_on_delivery',
-        'cart': cart,
-        'order_note': note,
-        'order_amount': subfinalPrice - discount
-      };
-      orderDI();
-      Navigator.of(context).push(MaterialPageRoute(
-          builder: ((context) => OrderScreen(
-              homeViewModel: homeViewModel,
-              subPrice: subfinalPrice,
-              order: myOrder,
-              price: finalPrice,
-              discount: discount))));
-    }
-        }else{
+        List<Map>? user = await _dataSource.onReedDbUser();
+        myOrder = {
+          'user_id': user?.last['id'] ?? 0,
+          'address': '$location',
+          'address_type': 'home',
+          'longitude': lang,
+          'latitude': lat,
+          'order_type': 'delivry',
+          'payment_method': 'cash_on_delivery',
+          'cart': cart,
+          'order_note': note,
+          'order_amount': subfinalPrice - discount
+        };
+        orderDI();
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: ((context) => OrderScreen(
+                homeViewModel: homeViewModel,
+                subPrice: subfinalPrice,
+                order: myOrder,
+                price: finalPrice,
+                discount: discount))));
+      }
+    } else {
       Navigator.of(context).pushReplacementNamed(Routes.welcomeScreen);
-        }
-    
+    }
   }
 
   @override
@@ -154,9 +168,6 @@ myOrder = {};
       response.forEach((element) {
         varies.add(json.decode(element['varies']) ?? []);
       });
-      print(varies);
-      print(add_on_ids);
-      print(add_on_qtys);
 
       for (int i = 0; i <= response.length - 1; i++) {
         subfinalPrice = subfinalPrice + response[i]['price'];

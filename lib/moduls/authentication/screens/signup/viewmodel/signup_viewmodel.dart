@@ -82,8 +82,11 @@ Future<String?> waitForFcmToken() async {
   String? fcmToken = await messaging.getToken();
   return fcmToken;
 }
-  
-  signup(BuildContext context) async {
+  signup(BuildContext context,    String firstName,
+     String lastName,
+     String phone,
+     String password,
+     String token) async {
     if (formKey.currentState!.validate()) {
       loading.toggle();
       
@@ -97,7 +100,8 @@ Future<String?> waitForFcmToken() async {
                       loading.toggle(),
                     },
                 (success) => {
-                      print("$phoneNumber"),
+                      loading.toggle(),
+                      completSignup(context,firstName:  firstName,lastName:  lastName,phone:  phone,password:  password,token:  token)
                       /*      _auth.verifyPhoneNumber(
                           phoneNumber: "$phoneNumber",
                           verificationCompleted: (e) {},
@@ -147,7 +151,6 @@ fcmToken = await waitForFcmToken() ?? "";
 
 
 
-print("-----@@$fcmToken");
      (await _signupUseCases.excute(SignupInput(
               firstName: firstName,
               lastName: lastName,

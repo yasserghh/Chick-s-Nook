@@ -165,7 +165,7 @@ class _CardScreenState extends State<CardScreen> {
                                                     width: 80,
                                                     height: 80,
                                                     child: Image.network(
-                                                         "${Constants.baseUrl}${Constants.producrUrl}${snapshot.data?[index]["image"]}"))),
+                                                        "${Constants.baseUrl}${Constants.producrUrl}${snapshot.data?[index]["image"]}"))),
                                           ),
                                           const SizedBox(
                                             width: 20,
@@ -190,7 +190,6 @@ class _CardScreenState extends State<CardScreen> {
                                                             FontsConstants
                                                                 .cairo,
                                                           )),
-                                                     
                                                     ],
                                                   ),
                                                   const Expanded(
@@ -436,7 +435,7 @@ class _CardScreenState extends State<CardScreen> {
                                                                       60),
                                                           contentPadding:
                                                               const EdgeInsets
-                                                                      .only(
+                                                                  .only(
                                                                   top: 12),
                                                           errorStyle:
                                                               getRegularStyle(
@@ -658,9 +657,28 @@ class _CardScreenState extends State<CardScreen> {
                   ? Padding(
                       padding: const EdgeInsets.only(
                           right: 30, left: 30, top: 16, bottom: 30),
-                      child: getCustomButton(context, 'الدفع', () {
+                      child: getCustomButton(context, 'الدفع',
+                          circleIndicator: _cardViewModel.isLoading, () async {
                         if (_homeViewModel.location.isNotEmpty &&
                             _homeViewModel.langi != null) {
+                          setState(() {
+                            _cardViewModel.isLoading = true;
+                          });
+                          bool isClose =
+                              await _homeViewModel.isWithinOneKilometer();
+                              setState(() {
+                            _cardViewModel.isLoading = false;
+                          });
+                          if (!isClose) {
+                            dimissDialog(context);
+                            showToast("نعتذر موقعك خارج نطاق الخدمة",
+                                duration: const Duration(seconds: 4),
+                                context: context,
+                                backgroundColor: ColorManager.reed,
+                                textStyle: getSemiBoldStyle(16,
+                                    ColorManager.white, FontsConstants.cairo));
+                            return;
+                          }
                           _cardViewModel.getMyOrder(
                               context,
                               _homeViewModel,
@@ -668,14 +686,14 @@ class _CardScreenState extends State<CardScreen> {
                               _homeViewModel.lati ?? 0,
                               _homeViewModel.langi ?? 0,
                               _cardViewModel.note);
-                        }else{
+                        } else {
                           dimissDialog(context);
-        showToast("يرجى تحديد موقعك قبل ارسال الطلب",
-            duration: const Duration(seconds: 5),
-            context: context,
-            backgroundColor: ColorManager.reed,
-            textStyle:
-                getSemiBoldStyle(14, ColorManager.white, FontsConstants.cairo));
+                          showToast("يرجى تحديد موقعك قبل ارسال الطلب",
+                              duration: const Duration(seconds: 5),
+                              context: context,
+                              backgroundColor: ColorManager.reed,
+                              textStyle: getSemiBoldStyle(16,
+                                  ColorManager.white, FontsConstants.cairo));
                         }
                         print(_homeViewModel.langi);
                       }),
