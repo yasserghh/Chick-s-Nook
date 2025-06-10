@@ -665,7 +665,7 @@ class _CardScreenState extends State<CardScreen> {
                             _cardViewModel.isLoading = true;
                           });
                           bool isClose =
-                              await _homeViewModel.isWithinOneKilometer();
+                              await _homeViewModel.isInsideCustomZone();
                               setState(() {
                             _cardViewModel.isLoading = false;
                           });

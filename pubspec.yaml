@@ -65,6 +65,7 @@ dependencies:
   firebase_messaging: ^15.1.6
   flutter_local_notifications: ^18.0.1
   flutter_launcher_icons: ^0.14.3
+  maps_toolkit: ^3.1.0
 
 dev_dependencies:
   flutter_test:
