@@ -3,6 +3,7 @@ import Flutter
 import Firebase
 import FirebaseMessaging
 import UserNotifications
+import GoogleMaps // ✅ Add this line
 
 @main
 @objc class AppDelegate: FlutterAppDelegate {
@@ -11,7 +12,10 @@ import UserNotifications
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
-        // Initialize Firebase first
+        // ✅ Provide Google Maps API key
+        GMSServices.provideAPIKey("AIzaSyC8rSoBoIV94xoqIAPcPCxvTbuFmU73Ik8")
+
+        // Initialize Firebase
         FirebaseApp.configure()
         
         // Set up notification delegates
@@ -50,6 +54,7 @@ extension AppDelegate: MessagingDelegate {
         // Send token to your server if needed
     }
 }
+
 
 
   // Optional for native token debug logging:
