@@ -598,7 +598,7 @@ const mp.LatLng(36.716727492805816, 2.8275594683729537),
             });
   }
 
-  @override
+/*   @override
   goToPageLocation(BuildContext context, HomeViewModel homeViewModel) async {
     var status = await Permission.location.status;
 
@@ -638,7 +638,47 @@ const mp.LatLng(36.716727492805816, 2.8275594683729537),
                 homeViewModel: homeViewModel,
               )));
     }
+  } */
+ @override
+goToPageLocation(BuildContext context, HomeViewModel homeViewModel) async {
+
+
+  LocationPermission permission = await Geolocator.checkPermission();
+
+  if (permission == LocationPermission.denied) {
+    permission = await Geolocator.requestPermission();
+
+    if (permission == LocationPermission.denied) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        backgroundColor: ColorManager.reed,
+        duration: const Duration(seconds: 3),
+        content: Text(
+          "يجب السماح للتطبيق بالوصول إلى نظام GPS",
+          style: getSemiBoldStyle(14, ColorManager.white, ""),
+        ),
+      ));
+      return;
+    }
   }
+
+  if (permission == LocationPermission.deniedForever) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      backgroundColor: ColorManager.reed,
+      duration: const Duration(seconds: 3),
+      content: Text(
+        "تم رفض صلاحية الموقع بشكل دائم. يرجى تفعيلها من إعدادات التطبيق.",
+        style: getSemiBoldStyle(14, ColorManager.white, ""),
+      ),
+    ));
+    await Geolocator.openAppSettings();
+    return;
+  }
+
+ 
+  Navigator.of(context).push(MaterialPageRoute(
+    builder: (_) => LocationScreen(homeViewModel: homeViewModel),
+  ));
+}
 
   @override
   showLocation(bool showed) {
