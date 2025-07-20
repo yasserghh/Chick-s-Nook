@@ -1,0 +1,1 @@
+C:\Chick-snook-client-master\build\app\intermediates\cxx\RelWithDebInfo\405v1j4r\obj\x86_64

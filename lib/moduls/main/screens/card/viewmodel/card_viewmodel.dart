@@ -102,9 +102,9 @@ class CardViewModel extends BaseViewModel {
       myOrder = {};
       List<Map> cart = [];
       List<Map>? response = await _dataSource.onReedDbCards();
-      if (finalPrice < 1000) {
+      if (finalPrice < 1300) {
         dimissDialog(context);
-        showToast("نعتذر الحد الأدنى للطلب 1000 دج",
+        showToast("نعتذر الحد الأدنى للطلب 1300 دج",
             duration: const Duration(seconds: 5),
             context: context,
             backgroundColor: ColorManager.reed,
